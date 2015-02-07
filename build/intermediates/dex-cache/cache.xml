@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/classes-e21559bed65ed10f82f80a46526f83013a5c1a61.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b8945fc23a7461c6fdde15753456d64b0a9358b">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-c594841c17c42739163f729a4e2cdb665d0f34e1.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-260c74e4819bce2952183d2f5017574b6719a3bd.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/classes-8a844be1fc6c1014dc8e11d299e3f215d3db4b6e.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/exploded-aar/newsFeed/library/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="1aeb0a8e4103ea6c9a7c2e8fd0da2441b42db9a2">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/classes-f88cfa2773f945749e8bcbe18c7306306e9a4775.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-8e09562749ec3f493209b1a0fa751185f9f80810.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-842291f5fe91a682dfbb59fe341460428be204e4.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-07994022a9dbcfaba0faf120dd31e61e581425b2.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/src/main/libs/mail.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="428e267abff0d10802ccde86b915da2c20471160">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/mail-3f25aa34a1b6676fb366e5f672388851f65832de.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f6d5c1ef2e982c3b7858408e3df389cf5d202da">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-5f9b8bf9d30c15dcb17cced5dfe74cb2cf8f6a43.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/libs/activation.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d1257cbff6faa44c1f325ae0d9413522d4644383">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/activation-b78bf15d9b3b8563dd02127a2339fe07397313a8.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-07994022a9dbcfaba0faf120dd31e61e581425b2.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="00b0b7233e1ec64acebfac40d4983d32d4712426">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-58937426b7724b88bf1be51a0a1ffa1d97023050.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/libs/additionnal.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="bd9e8dc422bb8c8405359947fe9f4282b49f57f4">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/additionnal-8dd14531dda28c4580cd50a38ba13cbc6033cc4c.jar" />
+    </item>
+    <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-ccc1dcd217117c9525786c4f2ff4d57cd1f8e489.jar" />
+    </item>
+
+</items>

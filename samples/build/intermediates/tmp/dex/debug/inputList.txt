@@ -1,0 +1,6 @@
+/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/classes/debug
+/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-07994022a9dbcfaba0faf120dd31e61e581425b2.jar
+/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/classes-f88cfa2773f945749e8bcbe18c7306306e9a4775.jar
+/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-8e09562749ec3f493209b1a0fa751185f9f80810.jar
+/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/classes-8a844be1fc6c1014dc8e11d299e3f215d3db4b6e.jar
+/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/pre-dexed/debug/classes-e21559bed65ed10f82f80a46526f83013a5c1a61.jar

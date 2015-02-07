@@ -15,8 +15,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -24,12 +27,30 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,11 +86,26 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private View mSignOutButtons;
     private View mLoginFormView;
 
+    private ProgressBar pb;
+
+    public static final String SERVER_URL ="http://192.168.1.143:3000/";
+    public static final String POST_FILE = "post.cgi";
+    public static final String POST_URL = SERVER_URL + POST_FILE;
+
+    private static final String POST_OPTION_APPID = "appid";
+    private static final String POST_OPTION_ITEMID = "itemid";
+    private static final String POST_OPTION_DATA = "data";
+
+    private static final String MY_APPID = "mudit";
+    private static final String MY_ITEMID = "gur";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        pb=(ProgressBar)findViewById(R.id.progressBar1);
+        pb.setVisibility(View.GONE);
         // Find the Google+ sign in button.
         mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
         if (supportsGooglePlayServices()) {
@@ -107,10 +143,19 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                if(mEmailView.getText().toString().length()<1){
+
+                    // out of range
+                    Toast.makeText(LoginActivity.this, "please enter something", Toast.LENGTH_LONG).show();
+                }else{
+                    pb.setVisibility(View.VISIBLE);
+                    String userName = mEmailView.getText().toString();
+                    String password = mPasswordView.getText().toString();
+                    new MyAsyncTask().execute(userName, password);
+                }
 
 
-                startActivity(intent);
             }
         });
 
@@ -127,6 +172,16 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             }
         });
 
+        Button Post = (Button) findViewById(R.id.post);
+        Post.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // postToServer(MY_APPID, MY_ITEMID, mEmailView.getText().toString());
+
+
+            }
+        });
+
 
 
         mLoginFormView = findViewById(R.id.login_form);
@@ -134,6 +189,17 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         mEmailLoginFormView = findViewById(R.id.email_login_form);
         mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+
+
+
 
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
@@ -405,7 +471,104 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             showProgress(false);
         }
     }
+
+
+    private class MyAsyncTask extends AsyncTask<String, Integer, Double>{
+
+        public String s;
+
+        @Override
+        protected Double doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            postData(params[0], params[1]);
+            return null;
+        }
+
+        protected void onPostExecute(Double result){
+            pb.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "command sent", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+           // MyAsyncTask newObj = new MyAsyncTask();
+            Boolean w = s == "ok";
+            Log.e("check" , w.toString());
+            if(s.equals("ok")) {
+                startActivity(intent);
+            }
+            else {
+                Toast.makeText(LoginActivity.this, "Wrong Username or Password", Toast.LENGTH_LONG).show();
+            }
+
+        }
+        protected void onProgressUpdate(Integer... progress){
+            pb.setProgress(progress[0]);
+        }
+
+        public void postData(String userName, String password) {
+            // Create a new HttpClient and Post Header
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://192.168.1.143:3000/login");
+
+            try {
+                // Add your data
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                JSONObject json = new JSONObject();
+                json.put("username" , userName);
+                json.put("password" , password);
+
+                StringEntity se = new StringEntity( json.toString());
+                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httppost.setEntity(se);
+
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+
+                s = EntityUtils.toString(response.getEntity());
+
+                s = s.toString();
+
+
+                int a=response.getStatusLine().getStatusCode();
+
+                Log.e("sadsadsa" , s);
+                Log.e("sadsadsa" , s.getClass().toString());
+
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        public void postToServer(String appID , String itemID , String data) {
+
+            HttpClient client = new DefaultHttpClient();
+
+            HttpPost post = new HttpPost(POST_URL); try {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair(POST_OPTION_APPID, appID));
+                nameValuePairs.add(new BasicNameValuePair(POST_OPTION_ITEMID, itemID));
+                nameValuePairs.add(new BasicNameValuePair(POST_OPTION_DATA, data));
+
+                post.setEntity(new UrlEncodedFormEntity(nameValuePairs)); // Execute HTTP Post
+                //     HttpResponse response = client.execute(post);
+                // int status = response.getStatusLine().getStatusCode();
+                //Log.i("status", "Post request finished with a status of: " + status);
+                // Toast.makeText(this, "Post completed w/ status: "+status, Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Log.e("stat", "Unable to post (IOException): ", e);
+            }
+        }
+
+    }
+
 }
+
+
+
 
 
 

@@ -1,0 +1,11 @@
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/classes/debug
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-07994022a9dbcfaba0faf120dd31e61e581425b2.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-58937426b7724b88bf1be51a0a1ffa1d97023050.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/activation-b78bf15d9b3b8563dd02127a2339fe07397313a8.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/additionnal-8dd14531dda28c4580cd50a38ba13cbc6033cc4c.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-260c74e4819bce2952183d2f5017574b6719a3bd.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-c594841c17c42739163f729a4e2cdb665d0f34e1.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-842291f5fe91a682dfbb59fe341460428be204e4.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/mail-3f25aa34a1b6676fb366e5f672388851f65832de.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-ccc1dcd217117c9525786c4f2ff4d57cd1f8e489.jar
+/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/classes-5f9b8bf9d30c15dcb17cced5dfe74cb2cf8f6a43.jar

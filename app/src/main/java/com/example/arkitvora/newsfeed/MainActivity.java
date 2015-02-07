@@ -2,13 +2,18 @@ package com.example.arkitvora.newsfeed;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,11 +25,13 @@ www.101apps.co.za*/
 
 public class MainActivity extends ActionBarActivity {
 
-    private static RecyclerView.Adapter adapter;
+    public static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private static RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
     private static ArrayList<PersonData> people;
+    private static ArrayList<PersonData> person;
     static View.OnClickListener myOnClickListener;
+    static Button.OnClickListener buttonOnClickListener;
     private static ArrayList<Integer> removedItems;
 
     @Override
@@ -33,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.feed_activity);
 
         myOnClickListener = new MyOnClickListener(this);
+        //buttonOnClickListener = new ButtonOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -47,9 +55,11 @@ public class MainActivity extends ActionBarActivity {
                     MyData.nameArray[i],
                     MyData.emailArray[i],
                     MyData.drawableArray[i],
-                    MyData.id_[i]
+                    MyData.id_[i],
+                    MyData.tickcount[i]
             ));
         }
+        person = people;
 
         removedItems = new ArrayList<Integer>();
 
@@ -72,12 +82,15 @@ public class MainActivity extends ActionBarActivity {
         }
 
         private void removeItem(View v) {
+            Log.d("outerObject", v.toString());
             int selectedItemPosition = recyclerView.getChildPosition(v);
+            Log.d("selectedItemPosition", Integer.toString(selectedItemPosition));
             RecyclerView.ViewHolder viewHolder
                     = recyclerView.findViewHolderForPosition(selectedItemPosition);
             TextView textViewName
                     = (TextView) viewHolder.itemView.findViewById(R.id.textViewName);
             String selectedName = (String) textViewName.getText();
+            Log.d("selectedItemText", selectedName);
             int selectedItemId = -1;
             for (int i = 0; i < MyData.nameArray.length; i++) {
                 if (selectedName.equals(MyData.nameArray[i])) {
@@ -87,8 +100,66 @@ public class MainActivity extends ActionBarActivity {
             removedItems.add(selectedItemId);
             people.remove(selectedItemPosition);
             adapter.notifyItemRemoved(selectedItemPosition);
+
         }
     }
+
+    public void incrementLikeCount(View v) {
+        int selectedItemPosition = recyclerView.getChildPosition(v);
+        //Log.d("selectedItemPosition", Integer.toString(selectedItemPosition));
+        RecyclerView.ViewHolder viewHolder
+                = recyclerView.findViewHolderForPosition(selectedItemPosition);
+        TextView textViewName
+                = (TextView) viewHolder.itemView.findViewById(R.id.textViewName);
+        String selectedName = (String) textViewName.getText();
+
+        int selectedItemId = -1;
+        for (int i = 0; i < MyData.nameArray.length; i++) {
+            if (selectedName.equals(MyData.nameArray[i])) {
+                selectedItemId = MyData.id_[i];
+            }
+        }
+        MyData.tickcount[selectedItemId]++;
+       // Log.d("selectedItemText", selectedName);
+     //   Log.d("selectedItemLikeCount", Integer.toString(MyData.tickcount[selectedItemId]));
+        people.remove(selectedItemPosition);
+        people.add(selectedItemPosition, new PersonData(
+                MyData.nameArray[selectedItemId],
+                MyData.emailArray[selectedItemId],
+                MyData.drawableArray[selectedItemId],
+                MyData.id_[selectedItemId],
+                MyData.tickcount[selectedItemId]
+        ));
+      //  PersonData p = people.get(selectedItemId);
+       // people.remove(4);
+      //  people.add(selectedItemPosition,p);
+       // adapter.notifyItemChanged(selectedItemId);
+
+
+      //  adapter = new MyAdapter(people);
+       // adapter.notifyDataSetChanged();
+
+      //  adapter.notifyItemChanged(selectedItemPosition);
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                    adapter.notifyDataSetChanged();
+
+            }
+        });
+
+
+
+    }
+
+
+
+
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,7 +188,8 @@ public class MainActivity extends ActionBarActivity {
                 MyData.nameArray[removedItems.get(0)],
                 MyData.emailArray[removedItems.get(0)],
                 MyData.drawableArray[removedItems.get(0)],
-                MyData.id_[removedItems.get(0)]
+                MyData.id_[removedItems.get(0)],
+                MyData.tickcount[removedItems.get(0)]
         ));
         adapter.notifyItemInserted(addItemAtListPosition);
         removedItems.remove(0);
