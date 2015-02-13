@@ -75,6 +75,13 @@
                     android:id="@+id/progressBar1"
                     android:layout_gravity="center_horizontal" />
 
+
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/networkImageView"
+                    android:layout_width="150dp"
+                    android:layout_height="170dp"
+                    android:layout_centerHorizontal="true" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

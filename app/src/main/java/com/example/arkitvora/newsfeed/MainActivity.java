@@ -1,10 +1,8 @@
 package com.example.arkitvora.newsfeed;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,18 +10,30 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /*created using Android Studio (Beta) 0.8.14
 www.101apps.co.za*/
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
 
     public static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -33,13 +43,28 @@ public class MainActivity extends ActionBarActivity {
     static View.OnClickListener myOnClickListener;
     static Button.OnClickListener buttonOnClickListener;
     private static ArrayList<Integer> removedItems;
+    private static ArrayList<Integer> addedNewItems;
+    private static Integer totalfeeds=0;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.feed_activity);
+        //setContentView(R.layout.feed_activity);
+        getLayoutInflater().inflate(R.layout.feed_activity, frameLayout);
+
+
+
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+
+
 
         myOnClickListener = new MyOnClickListener(this);
+        String url = "http://192.168.1.224:8080/tweet_get";
+        getFeedDataJson(url, "fdfd");
         //buttonOnClickListener = new ButtonOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -66,6 +91,109 @@ public class MainActivity extends ActionBarActivity {
         adapter = new MyAdapter(people);
         recyclerView.setAdapter(adapter);
     }
+
+
+    public void getFeedData(String url , String userName) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("login", userName);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        // params.put("password" , password);
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET,url , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("insidetry" , "insidetry");
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                            Log.d("volleyres" , response.toString());
+                            pDialog.hide();
+
+                            //Log.d("volleyres" , response.get("msg").toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("errorin" , Integer.toString(error.networkResponse.statusCode));
+
+                Log.d("insideerr" , "insideerr");
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+
+
+        VolleySingleton.getInstance().addToRequestQueue(req);
+
+    }
+
+
+    public void getFeedDataString(String url , String userName) {
+
+
+       final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d("xasxxasxsx", response.toString());
+                pDialog.hide();
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("fdsfsdv", "Error: " + error.getMessage());
+                pDialog.hide();
+            }
+        });
+
+// Adding request to request queue
+        VolleySingleton.getInstance().addToRequestQueue(strReq);
+
+    }
+
+
+    public void getFeedDataJson(String url , String userName) {
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        JsonArrayRequest req = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("dsdsf", response.toString());
+                        pDialog.hide();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("zcxzc", "Error: " + error.getMessage());
+                pDialog.hide();
+            }
+        });
+
+// Adding request to request queue
+        VolleySingleton.getInstance().addToRequestQueue(req);
+    }
+
+
+
+
+
+
+
 
 
     private static class MyOnClickListener implements View.OnClickListener {
@@ -179,7 +307,37 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
             }
         }
+        else if(item.getItemId()==R.id.action_new_item) {
+            Toast.makeText(this, "adding", Toast.LENGTH_SHORT).show();
+
+            addedNewItems.add(totalfeeds);
+
+
+            if (addedNewItems.size() != 0) {
+                addNewOneToList();
+            } else {
+                Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         return true;
+    }
+
+    private void addNewOneToList()
+    {
+        Toast.makeText(this, totalfeeds.toString(), Toast.LENGTH_SHORT).show();
+        PersonData p =new PersonData("Blue","kj@blue.com",R.drawable.cute,totalfeeds,0);
+        people.add(p);
+
+        totalfeeds++;
+
+
+        Toast.makeText(this, "added to people", Toast.LENGTH_SHORT).show();
+        adapter.notifyItemInserted(totalfeeds);
+
+
+        addedNewItems.remove(0);
+
     }
 
     private void addRemovedItemToList() {
@@ -194,4 +352,13 @@ public class MainActivity extends ActionBarActivity {
         adapter.notifyItemInserted(addItemAtListPosition);
         removedItems.remove(0);
     }
+
+
+
+
+
+
+
+
+
 }

@@ -1,12 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.arkitvora.newsfeed.MainActivity">
+    tools:context="com.example.arkitvora.newsfeed.ProfileActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_add_item"
           android:title="Add item"
           android:orderInCategory="100"
           app:showAsAction="always"/>
+    <item android:id="@+id/action_new_item"
+        android:title="Add New item"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
+    <item android:id="@+id/action_websearch"
+        android:icon="@drawable/action_search"
+        android:title="@string/action_websearch"
+        app:showAsAction="ifRoom|withText" />
+
 </menu>
 <!-- From: file:/Users/arkitvora/Documents/newsFeed/app/src/main/res/menu/menu_main.xml -->

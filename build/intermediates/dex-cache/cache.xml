@@ -23,6 +23,13 @@
         <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-260c74e4819bce2952183d2f5017574b6719a3bd.jar" />
     </item>
     <item
+        jar="/Users/arkitvora/Documents/newsFeed/app/libs/volley.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d4aaa36e04ee71a83444f8367c97a46fda662d2c">
+        <dex dex="/Users/arkitvora/Documents/newsFeed/app/build/intermediates/pre-dexed/debug/volley-40ab1f45383d95f2f980345412ac26b535c546ad.jar" />
+    </item>
+    <item
         jar="/Users/arkitvora/Documents/newsFeed/samples/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.1"

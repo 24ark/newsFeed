@@ -3,7 +3,6 @@ package com.example.arkitvora.newsfeed;
 /**
  * Created by arkitvora on 04/02/15.
  */
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;

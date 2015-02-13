@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -15,7 +16,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,6 +30,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -52,6 +59,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -77,6 +85,9 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
      */
     private UserLoginTask mAuthTask = null;
 
+    private static LoginActivity mInstance;
+    private static Context mAppContext;
+
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -87,6 +98,10 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private View mLoginFormView;
 
     private ProgressBar pb;
+
+    private ImageLoader mImageLoader;
+
+    public static String buttonType;
 
     public static final String SERVER_URL ="http://192.168.1.143:3000/";
     public static final String POST_FILE = "post.cgi";
@@ -103,6 +118,15 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mInstance = this;
+
+        this.setAppContext(getApplicationContext());
+
+        mImageLoader = VolleySingleton.getInstance().getImageLoader();
+
+        NetworkImageView avatar = (NetworkImageView)findViewById(R.id.networkImageView);
+        avatar.setImageUrl("https://lh4.googleusercontent.com/-NOi72r2KIUk/AAAAAAAAAAI/AAAAAAAAAAA/BiuPR-FlMQk/s48-c/photo.jpg",mImageLoader);
 
         pb=(ProgressBar)findViewById(R.id.progressBar1);
         pb.setVisibility(View.GONE);
@@ -144,7 +168,14 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             @Override
             public void onClick(View view) {
 
-                if(mEmailView.getText().toString().length()<1){
+
+                String userName = mEmailView.getText().toString();
+                String password = mPasswordView.getText().toString();
+                String SERVER_URL ="http://192.168.1.224:8080/tweet_post";
+
+                postLoginData(SERVER_URL , userName, password);
+
+              /*  if(mEmailView.getText().toString().length()<1){
 
                     // out of range
                     Toast.makeText(LoginActivity.this, "please enter something", Toast.LENGTH_LONG).show();
@@ -152,8 +183,12 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                     pb.setVisibility(View.VISIBLE);
                     String userName = mEmailView.getText().toString();
                     String password = mPasswordView.getText().toString();
+                    buttonType = "login";
                     new MyAsyncTask().execute(userName, password);
                 }
+
+*/
+
 
 
             }
@@ -176,11 +211,35 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         Post.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+
+
+                startActivity(intent);
                // postToServer(MY_APPID, MY_ITEMID, mEmailView.getText().toString());
 
 
             }
         });
+
+   /*     SignUpDetailsActivity.signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(SignUpDetailsActivity.firstName.getText().toString().length()<1){
+
+                    // out of range
+                    //Toast.makeText(SignUpDetailsActivity.this, "please enter something", Toast.LENGTH_LONG).show();
+                }else{
+                    pb.setVisibility(View.VISIBLE);
+                    String userName = SignUpDetailsActivity.firstName.getText().toString();
+                    String email = SignUpDetailsActivity.userEmail.getText().toString();
+                    String password = SignUpDetailsActivity.lastName.getText().toString();
+                    LoginActivity.buttonType = "signup";
+
+
+                    new LoginActivity().new MyAsyncTask().execute(userName,email, password );
+                }
+            }
+        }); */
 
 
 
@@ -194,6 +253,17 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+
+    public static LoginActivity getInstance(){
+        return mInstance;
+    }
+    public static Context getAppContext() {
+        return mAppContext;
+    }
+    public void setAppContext(Context mAppContext) {
+        this.mAppContext = mAppContext;
     }
 
 
@@ -329,14 +399,46 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         showProgress(show);
     }
 
+
+    public void postLoginData(String url , String userName , String password) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("login", userName);
+        params.put("password" , password);
+
+        JsonObjectRequest req = new JsonObjectRequest(url , new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                            Log.d("volleyres", response.toString());
+                            Log.d("volleyres" , response.get("msg").toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+
+
+        VolleySingleton.getInstance().addToRequestQueue(req);
+
+    }
+
     @Override
     protected void updateConnectButtonState() {
         //TODO: Update this logic to also handle the user logged in by email.
         boolean connected = getPlusClient().isConnected();
 
-        mSignOutButtons.setVisibility(connected ? View.VISIBLE : View.GONE);
-        mPlusSignInButton.setVisibility(connected ? View.GONE : View.VISIBLE);
-        mEmailLoginFormView.setVisibility(connected ? View.GONE : View.VISIBLE);
+       // mSignOutButtons.setVisibility(connected ? View.VISIBLE : View.GONE);
+       // mPlusSignInButton.setVisibility(connected ? View.GONE : View.VISIBLE);
+       // mEmailLoginFormView.setVisibility(connected ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -473,22 +575,25 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     }
 
 
-    private class MyAsyncTask extends AsyncTask<String, Integer, Double>{
+    public class MyAsyncTask extends AsyncTask<String, Integer, Double>{
 
         public String s;
+        HttpClient httpclient = new DefaultHttpClient();
 
         @Override
         protected Double doInBackground(String... params) {
             // TODO Auto-generated method stub
-            postData(params[0], params[1]);
+
+                postData(params[0], params[1]);
+
             return null;
         }
 
         protected void onPostExecute(Double result){
             pb.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), "command sent", Toast.LENGTH_LONG).show();
+           Toast.makeText(getApplicationContext(), "command sent", Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
            // MyAsyncTask newObj = new MyAsyncTask();
             Boolean w = s == "ok";
             Log.e("check" , w.toString());
@@ -506,8 +611,8 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
         public void postData(String userName, String password) {
             // Create a new HttpClient and Post Header
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.1.143:3000/login");
+
+            HttpPost httppost = new HttpPost("http://192.168.1.224:3000/login");
 
             try {
                 // Add your data
@@ -541,6 +646,48 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 e.printStackTrace();
             }
         }
+
+
+        public void postSignUpData(String userName, String email , String password) {
+            // Create a new HttpClient and Post Header
+
+            HttpPost httppost = new HttpPost("http://192.168.1.143:3000/signup");
+
+            try {
+                // Add your data
+
+                JSONObject json = new JSONObject();
+                json.put("username" , userName);
+                json.put("email" , email);
+                json.put("password" , password);
+
+                StringEntity se = new StringEntity( json.toString());
+                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httppost.setEntity(se);
+
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+
+                s = EntityUtils.toString(response.getEntity());
+
+                s = s.toString();
+
+
+                int a=response.getStatusLine().getStatusCode();
+
+
+
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
 
 
         public void postToServer(String appID , String itemID , String data) {

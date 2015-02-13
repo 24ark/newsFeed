@@ -1,0 +1,133 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:paddingTop="@dimen/abc_action_bar_icon_vertical_padding_material"
+    android:paddingStart="@dimen/abc_action_bar_icon_vertical_padding_material"
+    android:paddingLeft="@dimen/abc_action_bar_icon_vertical_padding_material"
+    android:paddingBottom="@dimen/abc_action_bar_icon_vertical_padding_material"
+    >
+    <TextView
+        android:id="@+id/firstLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:gravity="center_vertical"
+        android:text="Activate your account:"
+        android:textSize="@dimen/abc_text_size_large_material"
+        android:textStyle="bold"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:paddingBottom="120dp"/>
+
+    <ImageView
+        android:id="@+id/dp"
+        android:paddingTop="60dp"
+        android:layout_width="120dp"
+        android:layout_height="360dp"
+        android:contentDescription="DisplayPicture"
+
+        android:layout_alignRight="@+id/Name"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/firstLine"
+        android:src="@drawable/goose" />
+
+    <Button
+        android:id="@+id/galleryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gallery"
+        android:layout_above="@+id/Designation"
+        android:layout_alignLeft="@+id/dp"
+        android:layout_alignStart="@+id/dp"
+        android:layout_alignRight="@+id/Gender"
+        android:layout_alignEnd="@+id/Gender" />
+
+    <Button
+        android:id="@+id/camButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Camera"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/Age"
+        android:layout_above="@+id/button"
+        android:layout_alignLeft="@+id/galleryButton"
+        android:layout_alignStart="@+id/galleryButton" />
+
+    <EditText
+        android:id="@+id/Name"
+        android:layout_width="wrap_content"
+        android:layout_height="42dip"
+        android:singleLine="true"
+        android:hint="FirstName+LastName"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignBottom="@+id/firstLine"/>
+
+    <EditText
+        android:id="@+id/Gender"
+        android:layout_width="wrap_content"
+        android:layout_height="42dip"
+        android:singleLine="true"
+        android:hint="Gender:"
+        android:layout_below="@id/Name"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
+    <EditText
+        android:id="@+id/Age"
+        android:layout_width="wrap_content"
+        android:layout_height="42dip"
+        android:singleLine="true"
+        android:hint="Age:"
+        android:layout_below="@id/Gender"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
+
+    <EditText
+        android:id="@+id/Designation"
+        android:layout_width="wrap_content"
+        android:layout_height="42dip"
+        android:singleLine="true"
+        android:hint="Designation:"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/Age"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
+
+    <EditText
+        android:id="@+id/Qualifications"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:singleLine="true"
+        android:hint="Qualifications:"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/Designation"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Qualifications"
+        android:layout_centerHorizontal="true"
+        android:text="Activate"
+        android:id="@+id/button" />
+
+</RelativeLayout>
