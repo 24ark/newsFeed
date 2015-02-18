@@ -60,7 +60,7 @@ public class NewPostActivity extends ActionBarActivity {
                 String SERVER_URL ="http://192.168.1.38:8080/tweet_post";
                 String userName = LoginActivity.mEmailView.getText().toString();
                 String tweetdata = tweetData.getText().toString();
-                postTweetData(SERVER_URL , "mud22222" , tweetdata );
+                postTweetData(SERVER_URL , "mud3333333" , tweetdata );
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

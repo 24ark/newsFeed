@@ -2,7 +2,9 @@ package com.example.arkitvora.newsfeed;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,15 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -40,13 +51,13 @@ public class FriendItemFragment extends Fragment implements AbsListView.OnItemCl
      * The fragment's ListView/GridView.
      */
     private AbsListView mListView;
-    private ArrayList friendListItem;
+    private static ArrayList friendListItem;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    public ListAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
     public static FriendItemFragment newInstance(String param1, String param2) {
@@ -68,8 +79,8 @@ public class FriendItemFragment extends Fragment implements AbsListView.OnItemCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        friendListItem=new ArrayList();
-        for (int i = 0; i < ProfileData.firstNameArray.length; i++) {
+        //friendListItem=new ArrayList();
+     /*   for (int i = 0; i < ProfileData.firstNameArray.length; i++) {
             friendListItem.add(new ProfileBasics(
                     ProfileData.firstNameArray[i],
                     ProfileData.lastNameArray[i],
@@ -77,7 +88,7 @@ public class FriendItemFragment extends Fragment implements AbsListView.OnItemCl
                     ProfileData.drawableArray[i],
                     ProfileData.friendflagArray[i]
             ));
-        }
+        } */
         mAdapter=new FriendAdapter(getActivity(),friendListItem);
     }
 
@@ -112,6 +123,8 @@ public class FriendItemFragment extends Fragment implements AbsListView.OnItemCl
         super.onDetach();
         mListener = null;
     }
+
+
 
 
     @Override

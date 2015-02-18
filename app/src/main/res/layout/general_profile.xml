@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:id="@+id/profiledata"
+        android:weightSum="1"
+        android:showDividers="end">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView2"
+            android:src="@drawable/charlie"/>
+        </LinearLayout>
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="152dp"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:layout_weight="0.42"
+            android:weightSum="1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+
+            android:id="@+id/fullname"
+            android:layout_gravity="right"
+            android:elegantTextHeight="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/email"
+            android:layout_gravity="right" />
+
+            <Button
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:text="FriendList"
+                android:layout_gravity="end"
+                android:id="@+id/viewfriends"
+                android:layout_weight="1.24" />
+
+            <Button
+                android:layout_width="143dp"
+                android:layout_height="wrap_content"
+                android:text="Add Friend"
+                android:layout_gravity="end"
+                android:id="@+id/addfriend" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:orientation="horizontal"
+        android:background="@android:color/darker_gray"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/profiletweets">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

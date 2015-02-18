@@ -67,6 +67,14 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
+            android:name="com.example.arkitvora.newsfeed.SearchActivity"
+            android:label="@string/title_activity_search" >
+        </activity>
+        <activity
+            android:name="com.example.arkitvora.newsfeed.FriendsActivity"
+            android:label="@string/title_activity_friends" >
+        </activity>
+        <activity
             android:name="android.support.v7.widget.TestActivity"
             android:label="RecyclerViewTestActivity" />
     </application>

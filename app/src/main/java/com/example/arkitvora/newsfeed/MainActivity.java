@@ -1,6 +1,7 @@
 package com.example.arkitvora.newsfeed;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,6 +52,7 @@ public class MainActivity extends BaseActivity {
     private static ArrayList<Integer> removedItems;
     private static ArrayList<Integer> addedNewItems;
     private static Integer totalfeeds=0;
+    public static String searchText;
 
 
 
@@ -181,26 +184,38 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d("dsdsf", response.toString());
+
+
                         for(int i=0 ; i < response.length() ; i++) {
                             try {
+                                while(response == null) {
+                                    Log.d("aaaaa","aaaaaa");
+                                }
                                 JSONObject obj = response.getJSONObject(i);
                                 people.add(new PersonData(
-                                        obj.getJSONObject("contributors").get("username").toString(),
+                                        //obj.getJSONObject("contributors").get("username").toString(),
+                                        obj.get("username").toString(),
                                         obj.get("tbody").toString(),
                                         MyData.drawableArray[0],
                                         MyData.id_[0],
                                         MyData.tickcount[0]
                                 ));
 
+                                adapter.notifyDataSetChanged();
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
 
+                        if(pDialog != null) {
+                            pDialog.dismiss();
+                        }
 
 
 
-                        pDialog.hide();
+
+                       // pDialog.hide();
 
 
                     }
@@ -221,13 +236,75 @@ public class MainActivity extends BaseActivity {
 
 
 
+/*    public void getSearchDataJson(String url , String searchText) {
+        url = url +"?searchuser="+searchText;
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        JsonArrayRequest req = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("ds", response.toString());
+
+
+                        for(int i=0 ; i < response.length() ; i++) {
+                            try {
+                                while(response == null) {
+                                    Log.d("aaaaasearch","searchaaaaaa");
+                                }
+                                JSONObject obj = response.getJSONObject(i);
+                                FriendItemFragment.friendListItem.add(new ProfileBasics(
+                                        obj.get("fullname").toString(),
+                                        "",
+                                        obj.get("email").toString(),
+                                        ProfileData.drawableArray[i],
+                                        false
+                                ));
+
+                                adapter.notifyDataSetChanged();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if(pDialog != null) {
+                            pDialog.dismiss();
+                        }
+
+
+
+
+                        // pDialog.hide();
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("zcxzc", "Error: " + error.getMessage());
+                pDialog.hide();
+            }
+        });
+
+
+
+
+// Adding request to request queue
+        VolleySingleton.getInstance().addToRequestQueue(req);
+    }  */
 
 
 
 
 
 
-    private static class MyOnClickListener implements View.OnClickListener {
+
+
+
+    private static class MyOnClickListener implements View.OnClickListener, SearchDataFragment.OnFragmentInteractionListener{
 
         private final Context context;
 
@@ -259,6 +336,11 @@ public class MainActivity extends BaseActivity {
             removedItems.add(selectedItemId);
             people.remove(selectedItemPosition);
             adapter.notifyItemRemoved(selectedItemPosition);
+
+        }
+
+        @Override
+        public void onFragmentInteraction(String id) {
 
         }
     }
@@ -342,6 +424,7 @@ public class MainActivity extends BaseActivity {
         if (item.getItemId() == R.id.search_item) {
 //            open a search bar
             LayoutInflater li = LayoutInflater.from(this);
+           // final Fragment fragment = new SearchDataFragment();
             View promptsView = li.inflate(R.layout.searchprompt, null);
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -362,6 +445,15 @@ public class MainActivity extends BaseActivity {
                                     // get user input and set it to result
                                     // edit text
                                     // search.setText(userInput.getText());
+                                    searchText = userInput.getText().toString();
+                                    String url = "http://192.168.1.38:8080/user_search";
+                                  //  SearchDataFragment.getSearchDataJson(url, searchText);
+                                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                                    startActivity(intent);
+
+
+                                    Log.d("position", Integer.toString(position));
+                                   // getLayoutInflater().inflate(R.layout.fragment_frienditem, frameLayout);
                                     Log.d(userInput.getText().toString() , "this was searched for");
 
                                 }

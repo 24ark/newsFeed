@@ -325,6 +325,7 @@
     <!-- From: file:/Users/arkitvora/Documents/newsFeed/app/src/main/res/values/refs.xml -->
     <eat-comment/>
     <item name="fragment_frienditem" type="layout">@layout/fragment_frienditem_list</item>
+    <item name="fragment_searchdata" type="layout">@layout/fragment_searchdata_list</item>
     <!-- From: file:/Users/arkitvora/Documents/newsFeed/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
     <string name="abc_action_bar_home_description">Navigate home</string>
@@ -472,9 +473,11 @@
     <!-- From: file:/Users/arkitvora/Documents/newsFeed/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="title_activity_base">BaseActivity</string>
+    <string name="title_activity_friends">FriendsActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_new_post">NewPostActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
     <!-- From: file:/Users/arkitvora/Documents/newsFeed/app/src/main/res/values/strings_activity_settings.xml -->
     <eat-comment/>
     <string name="title_activity_settings">Settings</string>

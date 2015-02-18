@@ -24,7 +24,7 @@ import android.widget.Toast;
  * We are going to extend all our other activites from this BaseActivity so that every activity will have Navigation Drawer in it.
  * This activity layout contain one frame layout in which we will add our child activity layout.    
  */
-public class BaseActivity extends ActionBarActivity implements FriendItemFragment.OnFragmentInteractionListener{
+public class BaseActivity extends ActionBarActivity implements FriendItemFragment.OnFragmentInteractionListener {
 
     /**
      *  Frame layout: Which is going to be used as parent layout for child activity layout.
@@ -174,7 +174,6 @@ public class BaseActivity extends ActionBarActivity implements FriendItemFragmen
                 Log.d("position", Integer.toString(position));
                 break;
             case 1:
-
                 startActivity(new Intent(this, ProfileActivity.class));
                 Log.d("position", Integer.toString(position));
                 break;
@@ -184,10 +183,7 @@ public class BaseActivity extends ActionBarActivity implements FriendItemFragmen
                 Log.d("position", Integer.toString(position));
                 break;
             case 3:
-                fragment = new FriendItemFragment();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, fragment).commit();
-                Log.d("position", Integer.toString(position));
+                startActivity(new Intent(this, FriendsActivity.class));
              //   startActivity(new Intent(this, SignUpDetailsActivity.class));
                 break;
             case 4:
