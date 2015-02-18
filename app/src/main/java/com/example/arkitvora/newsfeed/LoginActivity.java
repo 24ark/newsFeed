@@ -1,6 +1,10 @@
 package com.example.arkitvora.newsfeed;
 
 import android.animation.Animator;
+
+import com.android.volley.Request;
+import com.facebook.AppEventsLogger;
+import com.facebook.Session;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 
@@ -27,7 +31,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +44,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
@@ -89,7 +97,8 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private static Context mAppContext;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    public static AutoCompleteTextView mEmailView;
+    public LinearLayout backLayout;
     private EditText mPasswordView;
     private View mProgressView;
     private View mEmailLoginFormView;
@@ -99,34 +108,44 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
     private ProgressBar pb;
 
-    private ImageLoader mImageLoader;
+   // private ImageLoader mImageLoader;
 
     public static String buttonType;
 
-    public static final String SERVER_URL ="http://192.168.1.143:3000/";
-    public static final String POST_FILE = "post.cgi";
-    public static final String POST_URL = SERVER_URL + POST_FILE;
 
-    private static final String POST_OPTION_APPID = "appid";
-    private static final String POST_OPTION_ITEMID = "itemid";
-    private static final String POST_OPTION_DATA = "data";
 
-    private static final String MY_APPID = "mudit";
-    private static final String MY_ITEMID = "gur";
+
+
+
+
+    private UiLifecycleHelper uiHelper;
+
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
+
         mInstance = this;
 
         this.setAppContext(getApplicationContext());
 
-        mImageLoader = VolleySingleton.getInstance().getImageLoader();
+        backLayout = (LinearLayout) findViewById(R.id.lin_layout);
+      //  backLayout.setBackgroundResource(R.drawable.goose);
 
-        NetworkImageView avatar = (NetworkImageView)findViewById(R.id.networkImageView);
-        avatar.setImageUrl("https://lh4.googleusercontent.com/-NOi72r2KIUk/AAAAAAAAAAI/AAAAAAAAAAA/BiuPR-FlMQk/s48-c/photo.jpg",mImageLoader);
+       // mImageLoader = VolleySingleton.getInstance().getImageLoader();
+
+        //NetworkImageView avatar = (NetworkImageView)findViewById(R.id.networkImageView);
+       // avatar.setImageUrl("https://lh4.googleusercontent.com/-NOi72r2KIUk/AAAAAAAAAAI/AAAAAAAAAAA/BiuPR-FlMQk/s48-c/photo.jpg",mImageLoader);
 
         pb=(ProgressBar)findViewById(R.id.progressBar1);
         pb.setVisibility(View.GONE);
@@ -171,7 +190,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
                 String userName = mEmailView.getText().toString();
                 String password = mPasswordView.getText().toString();
-                String SERVER_URL ="http://192.168.1.224:8080/tweet_post";
+                String SERVER_URL ="http://192.168.1.38:8080/login";
 
                 postLoginData(SERVER_URL , userName, password);
 
@@ -196,13 +215,15 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
 
 
+
+
+
         Button mSignUpButton = (Button) findViewById(R.id.sign_up_button);
         mSignUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
             Intent intent = new Intent(LoginActivity.this, SignUpDetailsActivity.class);
-
-
+                Log.d("dfqcdscqdsc", "casfcsfcsdac");
             startActivity(intent);
             }
         });
@@ -256,6 +277,49 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+
+        // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
+        // the onResume methods of the primary Activities that an app may be launched into.
+        AppEventsLogger.activateApp(this);
+
+       // updateUI();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+
+        //outState.putString(PENDING_ACTION_BUNDLE_KEY, pendingAction.name());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+
+        // Call the 'deactivateApp' method to log an app event for use in analytics and advertising
+        // reporting.  Do so in the onPause methods of the primary Activities that an app may be launched into.
+        AppEventsLogger.deactivateApp(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+
+
     public static LoginActivity getInstance(){
         return mInstance;
     }
@@ -273,6 +337,14 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isOpened()) {
+            Log.i("fbbbbb", "Logged in...");
+        } else if (state.isClosed()) {
+            Log.i("fbbbbb", "Logged out...");
+        }
     }
 
 
@@ -401,12 +473,12 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
 
     public void postLoginData(String url , String userName , String password) {
-
+       // url = url +"?username="+userName+"&password"+password;
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("login", userName);
+        params.put("username", userName);
         params.put("password" , password);
 
-        JsonObjectRequest req = new JsonObjectRequest(url , new JSONObject(params),
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url , new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -415,6 +487,18 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                             VolleyLog.v("Response:%n %s", response.toString(4));
                             Log.d("volleyres", response.toString());
                             Log.d("volleyres" , response.get("msg").toString());
+
+                            if(response.get("msg").toString().equals("1")) {
+                                Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+
+
+                                startActivity(intent);
+                            } else if(response.toString().equals("0")) {
+                                Toast.makeText(getApplicationContext(), "Wrong Username or Password", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Cant connect now", Toast.LENGTH_LONG).show();
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -690,25 +774,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
 
 
-        public void postToServer(String appID , String itemID , String data) {
 
-            HttpClient client = new DefaultHttpClient();
-
-            HttpPost post = new HttpPost(POST_URL); try {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair(POST_OPTION_APPID, appID));
-                nameValuePairs.add(new BasicNameValuePair(POST_OPTION_ITEMID, itemID));
-                nameValuePairs.add(new BasicNameValuePair(POST_OPTION_DATA, data));
-
-                post.setEntity(new UrlEncodedFormEntity(nameValuePairs)); // Execute HTTP Post
-                //     HttpResponse response = client.execute(post);
-                // int status = response.getStatusLine().getStatusCode();
-                //Log.i("status", "Post request finished with a status of: " + status);
-                // Toast.makeText(this, "Post completed w/ status: "+status, Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                Log.e("stat", "Unable to post (IOException): ", e);
-            }
-        }
 
     }
 

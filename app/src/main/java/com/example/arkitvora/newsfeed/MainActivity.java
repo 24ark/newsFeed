@@ -1,16 +1,21 @@
 package com.example.arkitvora.newsfeed;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,10 +65,12 @@ public class MainActivity extends BaseActivity {
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
 
+//        recyclerView.isInEditMode();
+
 
 
         myOnClickListener = new MyOnClickListener(this);
-        String url = "http://192.168.1.224:8080/tweet_get";
+        String url = "http://192.168.1.38:8080/tweet_get";
         getFeedDataJson(url, "fdfd");
         //buttonOnClickListener = new ButtonOnClickListener(this);
 
@@ -75,7 +82,7 @@ public class MainActivity extends BaseActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         people = new ArrayList<PersonData>();
-        for (int i = 0; i < MyData.nameArray.length; i++) {
+     /*   for (int i = 0; i < MyData.nameArray.length; i++) {
             people.add(new PersonData(
                     MyData.nameArray[i],
                     MyData.emailArray[i],
@@ -83,7 +90,7 @@ public class MainActivity extends BaseActivity {
                     MyData.id_[i],
                     MyData.tickcount[i]
             ));
-        }
+        }*/
         person = people;
 
         removedItems = new ArrayList<Integer>();
@@ -174,7 +181,28 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d("dsdsf", response.toString());
+                        for(int i=0 ; i < response.length() ; i++) {
+                            try {
+                                JSONObject obj = response.getJSONObject(i);
+                                people.add(new PersonData(
+                                        obj.getJSONObject("contributors").get("username").toString(),
+                                        obj.get("tbody").toString(),
+                                        MyData.drawableArray[0],
+                                        MyData.id_[0],
+                                        MyData.tickcount[0]
+                                ));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+
+
                         pDialog.hide();
+
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -183,6 +211,9 @@ public class MainActivity extends BaseActivity {
                 pDialog.hide();
             }
         });
+
+
+
 
 // Adding request to request queue
         VolleySingleton.getInstance().addToRequestQueue(req);
@@ -292,6 +323,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        menu.clear();
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -299,26 +331,57 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.action_add_item) {
-//            check if any items to add
-            if (removedItems.size() != 0) {
-                addRemovedItemToList();
-            } else {
-                Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if(item.getItemId()==R.id.action_new_item) {
+         if(item.getItemId() == R.id.action_new_item) {
             Toast.makeText(this, "adding", Toast.LENGTH_SHORT).show();
 
-            addedNewItems.add(totalfeeds);
+            Intent intent = new Intent(getApplicationContext(), NewPostActivity.class);
+            startActivity(intent);
 
 
-            if (addedNewItems.size() != 0) {
-                addNewOneToList();
-            } else {
-                Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
-            }
         }
+        if (item.getItemId() == R.id.search_item) {
+//            open a search bar
+            LayoutInflater li = LayoutInflater.from(this);
+            View promptsView = li.inflate(R.layout.searchprompt, null);
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
+
+            // set prompts.xml to alertdialog builder
+            alertDialogBuilder.setView(promptsView);
+
+            final EditText userInput = (EditText) promptsView
+                    .findViewById(R.id.editTextDialogUserInput);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    // get user input and set it to result
+                                    // edit text
+                                    // search.setText(userInput.getText());
+                                    Log.d(userInput.getText().toString() , "this was searched for");
+
+                                }
+                            })
+                    .setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+            Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show();
+
+        }
+
 
         return true;
     }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.arkitvora.newsfeed.FriendItemFragment"
+    android:id="@+id/container" >
+
+    <ListView android:id="@android:id/list" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:background="@color/cornsilk" android:divider="@android:color/black"
+        android:dividerHeight="10.0sp"/>
+
+    <TextView android:id="@android:id/empty" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/nameView"
+        android:layout_gravity="left|top"
+        style="@style/Base.ThemeOverlay.AppCompat.Dark"
+        android:clickable="false"
+        android:textColorHighlight="@color/abc_primary_text_material_dark" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/friendship"
+        android:layout_gravity="center_horizontal|top" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add"
+        android:id="@+id/Add"
+        android:layout_gravity="right|top"
+        android:elegantTextHeight="true" />
+
+</FrameLayout>

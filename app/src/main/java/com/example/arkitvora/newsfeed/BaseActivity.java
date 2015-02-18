@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +24,7 @@ import android.widget.Toast;
  * We are going to extend all our other activites from this BaseActivity so that every activity will have Navigation Drawer in it.
  * This activity layout contain one frame layout in which we will add our child activity layout.    
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends ActionBarActivity implements FriendItemFragment.OnFragmentInteractionListener{
 
     /**
      *  Frame layout: Which is going to be used as parent layout for child activity layout.
@@ -41,7 +42,7 @@ public class BaseActivity extends ActionBarActivity {
     /**
      * List item array for navigation drawer items.
      * */
-    protected String[] listArray = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+    protected String[] listArray = { "Home", "Profile", "Settings","Friends", "Logout"};
 
     /**
      * Static variable for selected item position. Which can be used in child activity to know which item is selected from the list.
@@ -170,25 +171,30 @@ public class BaseActivity extends ActionBarActivity {
             case 0:
 
                 startActivity(new Intent(this, MainActivity.class));
+                Log.d("position", Integer.toString(position));
                 break;
             case 1:
 
                 startActivity(new Intent(this, ProfileActivity.class));
+                Log.d("position", Integer.toString(position));
                 break;
             case 2:
 
-                startActivity(new Intent(this, SignUpDetailsActivity.class));
+                startActivity(new Intent(this, SettingsActivity.class));
+                Log.d("position", Integer.toString(position));
                 break;
             case 3:
-                fragment = new ProfileFragment();
+                fragment = new FriendItemFragment();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, fragment).commit();
+                Log.d("position", Integer.toString(position));
              //   startActivity(new Intent(this, SignUpDetailsActivity.class));
                 break;
             case 4:
                 fragment = new ProfileFragment();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, fragment).commit();
+                Log.d("position", Integer.toString(position));
               //  startActivity(new Intent(this, SignUpDetailsActivity.class));
                 break;
 
@@ -216,8 +222,7 @@ public class BaseActivity extends ActionBarActivity {
         }
 
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
+
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -229,7 +234,7 @@ public class BaseActivity extends ActionBarActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        //menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -241,5 +246,11 @@ public class BaseActivity extends ActionBarActivity {
         }else {
             mDrawerLayout.openDrawer(mDrawerList);
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(String id) {
+        Toast toast = Toast.makeText(this, "Works!",Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

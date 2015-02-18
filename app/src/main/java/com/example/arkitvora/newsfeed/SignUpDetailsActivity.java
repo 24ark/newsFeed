@@ -1,5 +1,6 @@
 package com.example.arkitvora.newsfeed;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 
-public class SignUpDetailsActivity extends BaseActivity {
+public class SignUpDetailsActivity extends Activity {
 
 
     public static EditText firstName;
@@ -43,12 +44,13 @@ public class SignUpDetailsActivity extends BaseActivity {
     public static EditText confirmPassword;
     public static ProgressBar pb;
     public static Button signUpButton;
+    public static Button login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_sign_up_details);
-        getLayoutInflater().inflate(R.layout.activity_sign_up_details, frameLayout);
+        setContentView(R.layout.activity_sign_up_details);
+        //getLayoutInflater().inflate(R.layout.activity_sign_up_details, frameLayout);
 
         firstName = (EditText) findViewById(R.id.first_name);
         lastName = (EditText) findViewById(R.id.last_name);
@@ -62,6 +64,7 @@ public class SignUpDetailsActivity extends BaseActivity {
 
 
         signUpButton = (Button) findViewById(R.id.signup_button);
+        login = (Button) findViewById(R.id.login);
 
 
 
@@ -138,22 +141,30 @@ public class SignUpDetailsActivity extends BaseActivity {
 
                     // out of range
                     Toast.makeText(SignUpDetailsActivity.this, "please enter something", Toast.LENGTH_LONG).show();
-                }else{
-
-                    if(userEmail.getText().toString().length()<1){
+                }else if(userEmail.getText().toString().length()<1){
 
                         // out of range
                         Toast.makeText(SignUpDetailsActivity.this, "please enter something", Toast.LENGTH_LONG).show();
-                    }else{
-                        String SERVER_URL = "http://192.168.1.224:3000/signup";
+                    }else if(password.getText().toString().equals(confirmPassword.getText().toString())){
+                        String SERVER_URL = "http://192.168.1.38:8080/signup";
                         String email = userEmail.getText().toString();
                         String first_name = firstName.getText().toString();
                         String last_name = lastName.getText().toString();
                         String userPassword = password.getText().toString();
-                        postSignupData(SERVER_URL,email , first_name , last_name , userPassword );
-                    }
+                        postSignupData(SERVER_URL, email , first_name , last_name , userPassword );
+                    } else {
+                    Toast.makeText(SignUpDetailsActivity.this, "Enter your password again", Toast.LENGTH_LONG).show();
+                }
 
                 }
+
+        });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(SignUpDetailsActivity.this, LoginActivity.class);
+               // Log.d("dfqcdscqdsc", "casfcsfcsdac");
+                startActivity(intent);
             }
         });
 
@@ -180,9 +191,7 @@ public class SignUpDetailsActivity extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -205,6 +214,18 @@ public class SignUpDetailsActivity extends BaseActivity {
                             VolleyLog.v("Response:%n %s", response.toString(4));
                             Log.d("volleyres" , response.toString());
                             Log.d("volleyres" , response.get("msg").toString());
+
+                            if(response.get("msg").toString().equals("1")) {
+                                Intent intent = new Intent(SignUpDetailsActivity.this, BaseActivity.class);
+
+
+                                startActivity(intent);
+                            } else if(response.toString().equals("0")) {
+                                Toast.makeText(getApplicationContext(), "User with the given username already exists", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Cant connect now", Toast.LENGTH_LONG).show();
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
