@@ -3,12 +3,14 @@ package com.example.arkitvora.newsfeed;
 import android.animation.Animator;
 
 import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.facebook.AppEventsLogger;
 import com.facebook.Session;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -62,6 +64,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -111,6 +114,9 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
    // private ImageLoader mImageLoader;
 
     public static String buttonType;
+    public static String myUserName;
+    public static String myUserFullName;
+
 
 
 
@@ -193,6 +199,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 String SERVER_URL ="http://192.168.1.38:8080/login";
 
                 postLoginData(SERVER_URL , userName, password);
+
 
               /*  if(mEmailView.getText().toString().length()<1){
 
@@ -489,6 +496,10 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                             Log.d("volleyres" , response.get("msg").toString());
 
                             if(response.get("msg").toString().equals("1")) {
+
+                                myUserName = mEmailView.getText().toString();
+                                String urluser = "http://192.168.1.38:8080/user_get";
+                                getUserDataJson(urluser,myUserName);
                                 Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
 
 
@@ -513,6 +524,60 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
         VolleySingleton.getInstance().addToRequestQueue(req);
 
+    }
+
+
+
+    public void getUserDataJson(String url , String userName) {
+        url = url+ "?username="+userName;
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        JsonArrayRequest req = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("dsdsf", response.toString());
+
+
+                        for(int i=0 ; i < response.length() ; i++) {
+                            try {
+
+                                JSONObject obj = response.getJSONObject(i);
+                               myUserFullName= obj.getJSONObject("user").get("firstname").toString() + " " +obj.getJSONObject("user").get("lastname").toString();
+                                Log.d("loginusername" , myUserFullName);
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if(pDialog != null) {
+                            pDialog.dismiss();
+                        }
+
+
+
+
+                        // pDialog.hide();
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("zcxzc", "Error: " + error.getMessage());
+                pDialog.hide();
+            }
+        });
+
+
+
+
+// Adding request to request queue
+        VolleySingleton.getInstance().addToRequestQueue(req);
     }
 
     @Override

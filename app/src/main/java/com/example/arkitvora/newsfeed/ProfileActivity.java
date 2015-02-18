@@ -53,7 +53,9 @@ public class ProfileActivity extends BaseActivity {
     public static TextView profileName;
     public static TextView profileEmail;
     public static Button addfriend;
-
+    public static String whoseprofile;
+    public static String theiremail;
+    public static Button viewfriendlist;
 
 
     @Override
@@ -64,18 +66,44 @@ public class ProfileActivity extends BaseActivity {
         profileName = (TextView)findViewById(R.id.fullname);
         profileEmail = (TextView)findViewById(R.id.email);
         addfriend=(Button)findViewById(R.id.addfriend);
-        profileEmail.setText(SearchActivity.puserEmail);
-        profileName.setText(SearchActivity.puserName);
-       if(SearchActivity.check.equals("1")) {
+        viewfriendlist=(Button)findViewById(R.id.viewfriends);
+        //for own profile
+        if(SearchActivity.check.equals("2")){
+           // Log.d("myusername",LoginActivity.myUserFullName);
+            profileEmail.setText(LoginActivity.myUserName);
+            profileName.setText(LoginActivity.myUserFullName);
+        getFeedDataJson(url, LoginActivity.myUserName);
+
+            addfriend.setVisibility(View.INVISIBLE);
+
+        }
+        else {
+            profileEmail.setText(SearchActivity.puserEmail);
+            profileName.setText(SearchActivity.puserName);
+        }
+        if(SearchActivity.check.equals("1")) {
             getFeedDataJson(url, SearchActivity.puserEmail);
             addfriend.setVisibility(View.INVISIBLE);
+        }
+
+        if(profileEmail.getText().toString().equals(LoginActivity.myUserName)) {
+            addfriend.setVisibility(View.INVISIBLE);
+            getFeedDataJson(url, LoginActivity.myUserName);
         }
 
         addfriend.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String postUrl = "http://192.168.1.38:8080/friends_post";
-                postAddFriend(postUrl , "kavya jain","kavya@jain.com", SearchActivity.puserName,SearchActivity.puserEmail);
+                postAddFriend(postUrl , LoginActivity.myUserFullName,LoginActivity.myUserName, SearchActivity.puserName,SearchActivity.puserEmail);
+            }
+        });
+        viewfriendlist.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!(profileEmail.equals(LoginActivity.myUserName))){SearchActivity.check="1";}
+                String postUrl = "http://192.168.1.38:8080/friends_get";
+                startActivity(new Intent(ProfileActivity.this , FriendsActivity.class));
             }
         });
 

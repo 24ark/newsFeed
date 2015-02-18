@@ -52,7 +52,7 @@ public class SearchActivity extends BaseActivity {
     public String searchText;
     public static String puserName;
     public static String puserEmail;
-    public static String check;
+    public static String check="2";
 
 
 

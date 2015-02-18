@@ -174,6 +174,7 @@ public class BaseActivity extends ActionBarActivity implements FriendItemFragmen
                 Log.d("position", Integer.toString(position));
                 break;
             case 1:
+                SearchActivity.check="2";
                 startActivity(new Intent(this, ProfileActivity.class));
                 Log.d("position", Integer.toString(position));
                 break;
@@ -183,6 +184,7 @@ public class BaseActivity extends ActionBarActivity implements FriendItemFragmen
                 Log.d("position", Integer.toString(position));
                 break;
             case 3:
+                SearchActivity.check="2";
                 startActivity(new Intent(this, FriendsActivity.class));
              //   startActivity(new Intent(this, SignUpDetailsActivity.class));
                 break;

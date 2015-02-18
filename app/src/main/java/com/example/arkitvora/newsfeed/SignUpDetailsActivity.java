@@ -162,6 +162,7 @@ public class SignUpDetailsActivity extends Activity {
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+
                 Intent intent = new Intent(SignUpDetailsActivity.this, LoginActivity.class);
                // Log.d("dfqcdscqdsc", "casfcsfcsdac");
                 startActivity(intent);
@@ -197,7 +198,7 @@ public class SignUpDetailsActivity extends Activity {
     }
 
 
-    public void postSignupData(String url , String email, String firstName , String lastName , String password) {
+    public void postSignupData(String url , String email, final String firstName , final String lastName , String password) {
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("firstname", firstName);
@@ -216,6 +217,8 @@ public class SignUpDetailsActivity extends Activity {
                             Log.d("volleyres" , response.get("msg").toString());
 
                             if(response.get("msg").toString().equals("1")) {
+                                LoginActivity.myUserName= userEmail.toString();
+                                LoginActivity.myUserFullName=firstName.toString()+" "+lastName.toString();
                                 Intent intent = new Intent(SignUpDetailsActivity.this, BaseActivity.class);
 
 

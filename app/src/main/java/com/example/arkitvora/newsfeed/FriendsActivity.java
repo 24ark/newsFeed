@@ -2,6 +2,7 @@ package com.example.arkitvora.newsfeed;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,10 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +49,7 @@ public class FriendsActivity extends BaseActivity {
     private static ArrayList<Integer> addedNewItems;
     private static Integer totalfeeds=0;
     public String searchText;
+    public String thisUser;
 
 
 
@@ -67,8 +71,10 @@ public class FriendsActivity extends BaseActivity {
 
         myOnClickListener = new MyOnClickListener(this);
         String url = "http://192.168.1.38:8080/friends_get";
+        if(SearchActivity.check.equals("2")){thisUser=LoginActivity.myUserName;}
+        else thisUser=ProfileActivity.profileEmail.getText().toString();
         String s = MainActivity.searchText;
-        getFriendListDataJson(url, "kavya@jain.com");
+        getFriendListDataJson(url, thisUser);
         //buttonOnClickListener = new ButtonOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -92,7 +98,7 @@ public class FriendsActivity extends BaseActivity {
 
         removedItems = new ArrayList<Integer>();
 
-        adapter = new MyAdapter(friendList);
+        adapter = new MyAdapterFriends(friendList);
         recyclerView.setAdapter(adapter);
     }
 
@@ -121,12 +127,24 @@ public class FriendsActivity extends BaseActivity {
                                     Log.d("aaaaasearch","searchaaaaaa");
                                 }
                                 JSONObject obj = response.getJSONObject(i);
+                                String confirmFriend;
+                                String confirmFriendName;
+
+                           /*     if(obj.getJSONObject("friend").get("friendid").toString().equals(LoginActivity.myUserName)) {
+                                    //confirmFriend = obj.getJSONObject("friend").get("userid").toString();
+                                    confirmFriendName = obj.getJSONObject("friend").get("username").toString();
+                                }
+                                else {
+                                    confirmFriend = obj.getJSONObject("friend").get("friendid").toString();
+                                    confirmFriendName = obj.getJSONObject("friend").get("friendname").toString();
+                                } */
+
                               //  Log.d("getting full name:", obj.get("fullname").toString());
                                 friendList.add(new PersonData(
                                         //obj.get("fullname").toString(),
                                        // obj.get("email").toString(),
-                                       "guess thy name",
-                                        obj.getJSONObject("friend").get("friendid").toString(),
+                                        obj.get("fullname").toString(),
+                                        obj.get("friendid").toString(),
 
                                         MyData.drawableArray[0],
                                         MyData.id_[0],
@@ -244,7 +262,7 @@ public class FriendsActivity extends BaseActivity {
 
 
 
-    private static class MyOnClickListener implements View.OnClickListener, SearchDataFragment.OnFragmentInteractionListener{
+    private class MyOnClickListener implements View.OnClickListener, SearchDataFragment.OnFragmentInteractionListener{
 
         private final Context context;
 
@@ -254,30 +272,72 @@ public class FriendsActivity extends BaseActivity {
 
         @Override
         public void onClick(View v) {
-            removeItem(v);
-        }
-
-        private void removeItem(View v) {
-            Log.d("outerObject", v.toString());
+            String url = "http://192.168.1.38:8080/friends_check";
+            // Log.d("cascsavcgdvasfhmcdvlalsbvcds" , url);
             int selectedItemPosition = recyclerView.getChildPosition(v);
             Log.d("selectedItemPosition", Integer.toString(selectedItemPosition));
+
             RecyclerView.ViewHolder viewHolder
                     = recyclerView.findViewHolderForPosition(selectedItemPosition);
             TextView textViewName
                     = (TextView) viewHolder.itemView.findViewById(R.id.textViewName);
-            String selectedName = (String) textViewName.getText();
-            Log.d("selectedItemText", selectedName);
-            int selectedItemId = -1;
-            for (int i = 0; i < MyData.nameArray.length; i++) {
-                if (selectedName.equals(MyData.nameArray[i])) {
-                    selectedItemId = MyData.id_[i];
+            TextView textViewEmail
+                    = (TextView) viewHolder.itemView.findViewById(R.id.textViewEmail);
+            Log.d("cascsavcgdvasfhmcdvlalsbvcds" , textViewName.getText().toString());
+            SearchActivity.puserEmail = textViewEmail.getText().toString();
+            SearchActivity.puserName = textViewName.getText().toString();
+
+            getCheckFriendData(url, LoginActivity.myUserName, SearchActivity.puserEmail);
+
+            //  getUserDataJson(url, textViewName.getText().toString());
+            // ProfileActivity profileObj = new ProfileActivity();
+            //if(!(LoginActivity.myUserName.equals(SearchActivity.puserEmail))){SearchActivity.check="1;}
+            startActivity(new Intent(FriendsActivity.this, ProfileActivity.class));
+            //  profileObj.profileName.setText(textViewName.getText().toString());
+            // profileObj.profileEmail.setText(textViewEmail.getText().toString());
+        }
+        public void getCheckFriendData(String url , String userName , String friendName) {
+            url = url +"?userid="+userName+"&friendid="+friendName;
+            // HashMap<String, String> params = new HashMap<String, String>();
+            //params.put("login", userName);
+            final ProgressDialog pDialog = new ProgressDialog(FriendsActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+            // params.put("password" , password);
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET,url , null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Log.d("insidetry" , "insidetry");
+                                VolleyLog.v("Response:%n %s", response.toString(4));
+                                Log.d("volleyres" , response.toString());
+                                pDialog.hide();
+
+                                SearchActivity.check = response.get("msg").toString();
+
+                                //Log.d("volleyres" , response.get("msg").toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("errorin" , Integer.toString(error.networkResponse.statusCode));
+
+                    Log.d("insideerr" , "insideerr");
+                    VolleyLog.e("Error: ", error.getMessage());
                 }
-            }
-            removedItems.add(selectedItemId);
-            friendList.remove(selectedItemPosition);
-            adapter.notifyItemRemoved(selectedItemPosition);
+            });
+
+
+            VolleySingleton.getInstance().addToRequestQueue(req);
 
         }
+
+
 
         @Override
         public void onFragmentInteraction(String id) {
